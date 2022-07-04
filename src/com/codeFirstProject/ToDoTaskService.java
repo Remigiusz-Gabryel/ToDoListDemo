@@ -14,9 +14,9 @@ import java.util.Scanner;
 public class ToDoTaskService implements TaskService {
     private List<Task> toDoTasks;
     private Scanner scanner;
-    private DataInitializer dataInitializer;
+    private Builder dataInitializer;
 
-    public ToDoTaskService(Scanner scanner,DataInitializer dataInitializer) throws IOException {
+    public ToDoTaskService(Scanner scanner, Builder dataInitializer) throws IOException {
         this.scanner = scanner;
         this.dataInitializer = dataInitializer;
         toDoTasks = getAll();
@@ -31,7 +31,7 @@ public class ToDoTaskService implements TaskService {
         for (String path :
                 dataInitializer.getToDoFiles()) {
 
-            File taskFile = new File(dataInitializer.getToDoListDirectory() + File.separator + path);
+            File taskFile = new File(dataInitializer.getToDoListDirectoryPath() + File.separator + path);
             Task task = new Task();
             boolean isSet = false;
             String fileName = taskFile.getName();
@@ -84,7 +84,7 @@ public class ToDoTaskService implements TaskService {
     @Override
     public void delete(int index) {
         Task toDelete = toDoTasks.get(index);
-        File fileToDelete = new File(dataInitializer.getToDoListDirectory() + File.separator + toDelete.getTitle() + ".txt");
+        File fileToDelete = new File(dataInitializer.getToDoListDirectoryPath() + File.separator + toDelete.getTitle() + ".txt");
 
         fileToDelete.delete();
         toDoTasks.remove(index);
@@ -92,9 +92,9 @@ public class ToDoTaskService implements TaskService {
     }
 
     @Override
-    public void update(int index) throws IOException{
+    public void edit(int index) throws IOException{
     Task task = toDoTasks.get(index);
-    File taskToUpdate = new File( dataInitializer.getToDoListDirectory() + File.separator + task.getTitle() + ".txt");
+    File taskToUpdate = new File( dataInitializer.getToDoListDirectoryPath() + File.separator + task.getTitle() + ".txt");
     try (PrintWriter writer = new PrintWriter(taskToUpdate)){
         task.setTitle(getTaskTitleFromUser(scanner));
         task.setPriority(getTaskPriorityFromUser(scanner));
@@ -106,7 +106,7 @@ public class ToDoTaskService implements TaskService {
         writer.write(task.getDescription() + "\n");
 
     }
-        File newTaskTitle = new File( dataInitializer.getToDoListDirectory() + File.separator + task.getTitle() + ".txt");
+        File newTaskTitle = new File( dataInitializer.getToDoListDirectoryPath() + File.separator + task.getTitle() + ".txt");
         taskToUpdate.renameTo(newTaskTitle);
 
     }

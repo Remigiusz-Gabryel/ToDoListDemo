@@ -10,7 +10,7 @@ public interface TaskService {
     Task get(int id);
     void create(String path) throws IOException;
     void delete(int index);
-    void update(int index) throws IOException;
+    void edit(int index) throws IOException;
 
     List<Task> getToDoTasks();
 

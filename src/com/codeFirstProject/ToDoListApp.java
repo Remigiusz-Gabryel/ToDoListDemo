@@ -11,10 +11,11 @@ import java.util.Scanner;
 public class ToDoListApp {
     Scanner scanner;
     private TaskService taskService;
-    private DataInitializer dataInitializer;
+    private Builder builder;
     private ToDoListManager toDoListManager;
 
-    public ToDoListApp(Scanner scanner) {
+    public ToDoListApp(Scanner scanner, Builder builder) {
+        this.builder = builder;
         this.scanner = scanner;
     }
 
@@ -23,7 +24,7 @@ public class ToDoListApp {
 
 
             try {
-                initializeToDoAppData();
+                AddToDoAppContext();
 
                 mainMenuActions();
 
@@ -36,14 +37,13 @@ public class ToDoListApp {
 
     }
 
-    private void initializeToDoAppData() throws IOException {
+    private void AddToDoAppContext() throws IOException {
         System.out.println("Provide path to ToDoList");
         String toDoListPath = scanner.nextLine();
-        dataInitializer = new DataInitializer();
-        dataInitializer.setToDoListDirectory(toDoListPath);
-        dataInitializer.initializeToDoList();
-        taskService = new ToDoTaskService(scanner,dataInitializer);
-        toDoListManager = new ToDoListManager(dataInitializer,taskService);
+        builder.setToDoListDirectoryPath(toDoListPath);
+        builder.UseToDoListFileContext();
+        taskService = new ToDoTaskService(scanner, builder);
+        toDoListManager = new ToDoListManager(builder,taskService);
 
     }
 
@@ -99,7 +99,7 @@ public class ToDoListApp {
     }
     private void createTaskAction() throws IOException{
         scanner.nextLine();
-        taskService.create(dataInitializer.getToDoListDirectory());
+        taskService.create(builder.getToDoListDirectoryPath());
         toDoListManager.setListOfTask(taskService.getAll());
         toDoListManager.displayTasks();
         mainMenuActions();
@@ -113,7 +113,7 @@ public class ToDoListApp {
             return;
         }
         int taskToUpdate = ScannerHelperMethods.getInt(scanner,0,taskService.getToDoTasks().size() - 1);
-        taskService.update(taskToUpdate);
+        taskService.edit(taskToUpdate);
         mainMenuActions();
     }
 
@@ -121,8 +121,8 @@ public class ToDoListApp {
         this.taskService = taskService;
     }
 
-    public void setDataInitializer(DataInitializer dataInitializer) {
-        this.dataInitializer = dataInitializer;
+    public void setBuilder(Builder builder) {
+        this.builder = builder;
     }
 
     public void setToDoListManager(ToDoListManager toDoListManager) {

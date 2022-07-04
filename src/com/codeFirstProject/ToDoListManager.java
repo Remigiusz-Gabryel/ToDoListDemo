@@ -5,19 +5,17 @@ import com.codeFirstProject.interfaces.TaskService;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class ToDoListManager {
     private List<String> taskFilesPaths;
     // Interface needed
-    private DataInitializer dataInitializer;
+    private Builder dataInitializer;
     private List<Task> listOfTask;
     private TaskService taskService;
 
-    public ToDoListManager(DataInitializer dataInitializer,TaskService taskService) throws IOException {
+    public ToDoListManager(Builder dataInitializer, TaskService taskService) throws IOException {
         this.dataInitializer = dataInitializer;
         this.taskService = taskService;
         this.taskFilesPaths = dataInitializer.getToDoFiles();
@@ -43,7 +41,7 @@ public class ToDoListManager {
         for (String path :
                 taskFilesPaths) {
 
-            File taskFile = new File(dataInitializer.getToDoListDirectory() + File.separator + path);
+            File taskFile = new File(dataInitializer.getToDoListDirectoryPath() + File.separator + path);
             Task task = new Task();
 
             String fileName = taskFile.getName();

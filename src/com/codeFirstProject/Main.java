@@ -1,5 +1,7 @@
 package com.codeFirstProject;
 
+import com.codeFirstProject.context.FileContext;
+import com.codeFirstProject.interfaces.TaskService;
 import com.codeFirstProject.util.ScannerHelperMethods;
 import com.codeFirstProject.util.StandardMessages;
 
@@ -13,9 +15,11 @@ public class Main {
 
         try (Scanner scanner = new Scanner(System.in)) {
 
+            Builder builder = new Builder("ToDoList");
+            builder.setFileContext(new FileContext());
+            builder.setTaskService(new ToDoTaskService(scanner,builder));
 
-
-            ToDoListApp toDoListApp = new ToDoListApp(scanner);
+            ToDoListApp toDoListApp = new ToDoListApp(scanner,builder);
 
 
             toDoListApp.run();
@@ -27,6 +31,8 @@ public class Main {
 
 
 
+        } catch(IOException e){
+            System.out.println(e.getMessage());
         }
 
     }
